@@ -1,0 +1,18 @@
+[
+	{
+		"customer": {
+			"actNbr": "60004452147896500",
+			"bankActNbr": "6000445214789650QW",
+			"cardMemberName": "ERTY ASDFGHJ DEWSCFG",
+			"paymentDueDate": "01-02-2019"
+		}
+	},
+	{
+		"customer": {
+			"actNbr": "60004452147896600",
+			"bankActNbr": "6000445214789660AS",
+			"cardMemberName": "DFTER AEQWEQW HDERTER",
+			"paymentDueDate": "01-02-2019"
+		}
+	}
+]
