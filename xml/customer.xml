@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Customers>
+	<Customer>
+		<actNbr>60004452147896500</actNbr>
+		<bankActNbr>6000445214789650QW</bankActNbr>
+		<cardMemberName>ERTY ASDFGHJ DEWSCFG</cardMemberName>
+		<paymentDueDate>2018-12-31 18:32:00.0 UTC</paymentDueDate>
+	</Customer>
+	<Customer>
+		<actNbr>60004452147896600</actNbr>
+		<bankActNbr>6000445214789660AS</bankActNbr>
+		<cardMemberName>DFTER AEQWEQW HDERTER</cardMemberName>
+		<paymentDueDate>2018-12-31 18:32:00.0 UTC</paymentDueDate>
+	</Customer>
+</Customers>

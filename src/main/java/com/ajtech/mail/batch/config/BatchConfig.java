@@ -1,4 +1,4 @@
-package com.ajtech.mail.batch.config;
+/*package com.ajtech.mail.batch.config;
 
 import java.beans.PropertyEditor;
 import java.text.DateFormat;
@@ -19,7 +19,7 @@ import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
-import org.springframework.batch.item.xml.StaxEventItemWriter;
+import org.springframework .batch.item.xml.StaxEventItemWriter;
 import org.springframework.batch.support.DefaultPropertyEditorRegistrar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -134,3 +134,4 @@ public class BatchConfig {
 	}
 
 }
+*/
