@@ -1,4 +1,4 @@
-package com.ajtech.mail.batch.domain;
+package com.cts.batch.domain;
 
 import java.util.Date;
 

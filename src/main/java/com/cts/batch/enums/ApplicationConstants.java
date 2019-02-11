@@ -1,4 +1,4 @@
-package com.ajtech.mail.batch.enums;
+package com.cts.batch.enums;
 
 public enum ApplicationConstants {
     ACT_NBR_START_POSITION(1),
@@ -19,8 +19,4 @@ public enum ApplicationConstants {
         return value;
     }
 
-    public static void main(String[] args) {
-        System.out.println(ApplicationConstants.ACT_NBR_START_POSITION.getValue());
-        System.out.println(ApplicationConstants.ACT_NBR_END_POSITION.getValue());
-    }
 }

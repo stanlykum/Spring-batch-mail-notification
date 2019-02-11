@@ -1,4 +1,4 @@
-package com.ajtech.mail.batch.config;
+package com.cts.batch.config;
 
 import java.beans.PropertyEditor;
 import java.text.DateFormat;
@@ -27,23 +27,34 @@ import org.springframework.batch.item.json.JsonObjectMarshaller;
 import org.springframework.batch.item.xml.StaxEventItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.oxm.xstream.XStreamMarshaller;
 
-import com.ajtech.mail.batch.domain.Customer;
-import com.ajtech.mail.batch.enums.ApplicationConstants;
-import com.ajtech.mail.batch.utils.JsonUtils;
+import com.cts.batch.config.FeignConfiguration.TokenFeignClient;
+import com.cts.batch.domain.Customer;
+import com.cts.batch.enums.ApplicationConstants;
+import com.cts.batch.listener.JobCompletionNotificationListener;
+import com.cts.batch.service.S3Service;
+import com.cts.batch.utils.JsonUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Configuration
+@Slf4j
 public class BatchConfiguration {
 	@Autowired
 	private JobBuilderFactory jobBuilderFactory;
 	@Autowired
 	private StepBuilderFactory stepBuilderFactory;
+	@Autowired
+	private TokenFeignClient tokenFeignClient;
 
 	@Bean
 	public FlatFileItemReader<Customer> customerFlatFileItemReader() {
@@ -94,7 +105,7 @@ public class BatchConfiguration {
 	}
 
 	@Bean
-	public JsonFileItemWriter<Customer> writer1() throws JsonProcessingException {
+	public JsonFileItemWriter<Customer> writer() throws JsonProcessingException {
 		JsonObjectMarshaller<Customer> jsonObjectMarshaller = object -> {
 			return populateCustomers(object);
 		};
@@ -117,43 +128,37 @@ public class BatchConfiguration {
 	}
 
 	@Bean
-	public StaxEventItemWriter<Customer> writer() {
-		StaxEventItemWriter<Customer> writer = new StaxEventItemWriter<Customer>();
-		writer.setRootTagName("Customers");
-		writer.setResource(new FileSystemResource("xml/customer.xml"));
-		writer.setMarshaller(marshaller());
-		return writer;
-	}
-
-	private XStreamMarshaller marshaller() {
-		XStreamMarshaller marshaller = new XStreamMarshaller();
-		@SuppressWarnings("rawtypes")
-		Map<String, Class> map = new HashMap<>();
-		map.put("Customer", Customer.class);
-		marshaller.setAliases(map);
-		return marshaller;
-	}
-
-	@Bean
 	public Step step1() throws JsonProcessingException {
 		return stepBuilderFactory.get("step1").<Customer, Customer>chunk(10).reader(customerFlatFileItemReader())
-				.processor(customerProcess()).writer(writer1()).build();
+				.processor(customerProcess()).writer(writer()).build();
 	}
 
 	@Bean
 	public Job runJob() throws JsonProcessingException {
-		return jobBuilderFactory.get("report generation").flow(step1()).end().build();
+		return jobBuilderFactory.get("report generation").listener(joblistener()).flow(step1()).end().build();
 	}
 
 	public ItemProcessor<Customer, Customer> customerProcess() {
 		ItemProcessor<Customer, Customer> process = new ItemProcessor<Customer, Customer>() {
 			@Override
 			public Customer process(Customer item) throws Exception {
+				log.info("Actual Account={},Token from feign={}",item.getActNbr(),tokenFeignClient.retrieveTokenByCardNo(item.getActNbr()));
+				
+				//DocumentContext jsonContext = JsonPath.parse(tokenFeignClient.retrieveTokenByCardNo(item.getActNbr()));
+				//String jsonpathCreatorName = jsonContext.read(".$[''tokenNo']");
+				//item.setActNbr(tokenFeignClient.retrieveTokenByCardNo(item.getActNbr()));
 				return item;
 			}
 		};
 		return process;
 
 	}
+	
+	
+	@Bean
+	public JobCompletionNotificationListener joblistener() {
+		return new JobCompletionNotificationListener();
+	}
+
 
 }

@@ -1,4 +1,4 @@
-package com.ajtech.mail.batch;
+package com.cts.batch;
 
 import org.h2.server.web.WebServlet;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;

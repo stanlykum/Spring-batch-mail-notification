@@ -1,4 +1,4 @@
-package com.ajtech.mail.batch.utils;
+package com.cts.batch.utils;
 
 import java.text.SimpleDateFormat;
 
